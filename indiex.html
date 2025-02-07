@@ -158,6 +158,7 @@
         <button onclick="showHome()">Home</button>
         <button onclick="showIntroduction()">Giới thiệu</button>
         <button onclick="showFeedback()">Nhận xét về cô Dung</button>
+        <button onclick="showLoginForm()">Đăng nhập/Đăng ký</button>
     </div>
 
     <div class="container" id="container">
@@ -220,7 +221,8 @@
         let voteResult = '';
         let yesVotes = 0;
         let noVotes = 0;
-        let username = "Người Dùng"; // Thay thế bằng tên người dùng thực tế khi đăng nhập.
+        let username = null; // Không có tên người dùng khi chưa đăng nhập
+        let hasVoted = false; // Cờ xác định xem người dùng đã bình chọn chưa
 
         function showHome() {
             hideAllSections();
@@ -242,14 +244,30 @@
             document.getElementById('guide-section').style.display = 'block';
         }
 
+        function showLoginForm() {
+            hideAllSections();
+            document.getElementById('login-form').style.display = 'block';
+        }
+
         function hideAllSections() {
             document.getElementById('home-section').style.display = 'none';
             document.getElementById('intro-section').style.display = 'none';
             document.getElementById('comment-section').style.display = 'none';
             document.getElementById('guide-section').style.display = 'none';
+            document.getElementById('login-form').style.display = 'none';
         }
 
         function vote(choice) {
+            if (!username) {
+                alert("Vui lòng đăng nhập để tham gia bình chọn!");
+                return;
+            }
+
+            if (hasVoted) {
+                alert("Bạn đã bình chọn rồi. Không thể thay đổi phiếu bầu.");
+                return;
+            }
+
             if (choice === 'Có') {
                 yesVotes++;
                 document.getElementById('yes-vote-count').innerHTML = yesVotes;
@@ -258,6 +276,7 @@
                 document.getElementById('no-vote-count').innerHTML = noVotes;
             }
             document.getElementById('vote-result').innerHTML = `Bạn đã chọn: ${choice}`;
+            hasVoted = true;  // Đánh dấu người dùng đã bình chọn
         }
 
         function submitComment() {
@@ -267,7 +286,7 @@
                 document.getElementById('comments').innerHTML = comments.map(c => ` 
                     <div class="comment-box">
                         <div class="user">${c.user}</div>
-                        <div>${c.text}</div>
+                        <div class="comment">${c.text}</div>
                     </div>
                 `).join('');
                 document.getElementById('comment-input').value = '';
@@ -277,28 +296,32 @@
         function submitIntroComment() {
             introComment = document.getElementById('intro-comment').value;
             if (introComment) {
-                alert('Cảm ơn bạn đã gửi ý kiến!');
-                document.getElementById('intro-comment').disabled = true;
-                document.getElementById('submit-intro-comment').disabled = true;
+                alert("Cảm ơn bạn đã để lại ý kiến về cô Dung!");
             }
         }
 
         function login() {
-            alert('Đăng nhập thành công!');
-            document.getElementById('login-form').style.display = 'none';
+            let user = document.getElementById('username').value;
+            let pass = document.getElementById('password').value;
+            if (user && pass) {
+                username = user;
+                alert("Đăng nhập thành công!");
+                showHome();  // Quay lại giao diện chính sau khi đăng nhập.
+            } else {
+                alert("Vui lòng nhập đầy đủ thông tin.");
+            }
         }
 
         function register() {
-            alert('Đăng ký thành công!');
-            document.getElementById('login-form').style.display = 'none';
+            alert("Chức năng đăng ký sẽ được phát triển sau.");
         }
 
         function loginWithGoogle() {
-            alert('Đăng nhập bằng Google!');
+            alert("Đăng nhập bằng Google sẽ được phát triển sau.");
         }
 
         function loginWithFacebook() {
-            alert('Đăng nhập bằng Facebook!');
+            alert("Đăng nhập bằng Facebook sẽ được phát triển sau.");
         }
     </script>
 </body>
